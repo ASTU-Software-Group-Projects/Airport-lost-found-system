@@ -3,11 +3,11 @@
 // DATABASE CONFIGURATION
 // =============================================
 
-$db_server = "localhost";
-$db_username = "root";
-$db_password = "root";
-$db_name = "lost_found_db";
-$db_port = 3308;
+$db_server = getenv('DB_SERVER') ?: "localhost";
+$db_username = getenv('DB_USERNAME') ?: "root";
+$db_password = getenv('DB_PASSWORD') ?: "";
+$db_name = getenv('DB_NAME') ?: "lost_found_db";
+$db_port = getenv('DB_PORT') ?: 3306;
 
 $conn = mysqli_connect($db_server, $db_username, $db_password, $db_name, $db_port);
 
@@ -21,9 +21,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-define('SITE_NAME', 'Airport Lost & Found System');
-define('SITE_URL', 'http://localhost/lost-found/');
-define('UPLOAD_PATH', $_SERVER['DOCUMENT_ROOT'] . '/lost-found/uploads/');
+define('SITE_NAME', 'Ethiopian Airlines Lost & Found');
+define('SITE_URL', getenv('SITE_URL') ?: 'http://localhost/airport-lost-and-found-main/');
+define('UPLOAD_PATH', getenv('UPLOAD_PATH') ?: $_SERVER['DOCUMENT_ROOT'] . '/airport-lost-and-found-main/uploads/');
 define('MAX_FILE_SIZE', 5242880);
 
 function generateClaimCode() {
@@ -76,10 +76,10 @@ function uploadFile($file, $folder) {
 
 function getStatusBadge($status) {
     $badges = [
-        'pending' => '<span class="badge badge-warning">🔍 Pending</span>',
-        'matched' => '<span class="badge badge-success">✅ Matched</span>',
-        'returned' => '<span class="badge badge-info">📦 Returned</span>',
-        'unclaimed' => '<span class="badge badge-warning">⏰ Unclaimed</span>'
+        'pending' => '<span class="badge badge-warning"><i class="fas fa-search"></i> Pending</span>',
+        'matched' => '<span class="badge badge-success"><i class="fas fa-check-circle"></i> Matched</span>',
+        'returned' => '<span class="badge badge-info"><i class="fas fa-box"></i> Returned</span>',
+        'unclaimed' => '<span class="badge badge-warning"><i class="fas fa-clock"></i> Unclaimed</span>'
     ];
     return isset($badges[$status]) ? $badges[$status] : $badges['pending'];
 }
