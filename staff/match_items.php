@@ -35,47 +35,83 @@ unset($_SESSION['match_success']);
     <title>Match Items - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="../style.css">
     <style>
-        .item-list { max-height: 500px; overflow-y: auto; }
-        .match-card { border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
-        .match-card:hover { border-color: var(--secondary); background: #F3F4F6; }
-        .match-card.selected { border-color: var(--success); border-width: 2px; background: #ECFDF5; }
+        .item-list { max-height: 500px; overflow-y: auto; padding: 10px; }
+        .match-card { 
+            border: 1px solid var(--glass-border); 
+            border-radius: var(--radius-md); 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s var(--ease-glass); 
+            background: var(--glass-white);
+            backdrop-filter: var(--blur-sm);
+        }
+        .match-card:hover { 
+            transform: translateY(-2px);
+            background: var(--glass-white-md);
+            border-color: var(--accent-aqua);
+        }
         input[type="radio"] { display: none; }
-        input[type="radio"]:checked + label .match-card { border-color: var(--success); border-width: 2px; background: #ECFDF5; box-shadow: 0 0 0 1px var(--success); }
+        input[type="radio"]:checked + label .match-card { 
+            background: rgba(94, 231, 223, 0.15);
+            border-color: var(--accent-aqua); 
+            box-shadow: 0 0 15px rgba(94, 231, 223, 0.2), inset 0 0 10px rgba(94, 231, 223, 0.1);
+        }
+        .item-list::-webkit-scrollbar { width: 6px; }
+        .item-list::-webkit-scrollbar-track { background: transparent; }
+        .item-list::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<header>
-    <div class="nav-container">
-        <a href="dashboard.php" class="logo">👨‍✈️ Staff Panel</a>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="view_lost.php">Lost Items</a></li>
-                <li><a href="view_found.php">Found Items</a></li>
-                <li><a href="match_items.php" class="active">Match Items</a></li>
-                <li><a href="logout.php" class="btn btn-danger text-white" style="color:white; padding: 5px 15px;">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+<div class="scene" aria-hidden="true">
+  <div class="scene__blob scene__blob--1"></div>
+  <div class="scene__blob scene__blob--2"></div>
+  <div class="scene__blob scene__blob--3"></div>
+</div>
 
-<div class="container">
-    <h2 class="mb-4">Manual Item Matching</h2>
-    
+<!-- Theme toggle -->
+<button class="glass glass-btn theme-toggle-btn" id="theme-toggle" aria-label="Toggle colour scheme" title="Toggle light / dark mode">
+  <span class="icon-dark" aria-hidden="true"><i class="fas fa-sun"></i></span>
+  <span class="icon-light" aria-hidden="true"><i class="fas fa-moon"></i></span>
+</button>
+
+<main class="page">
+  <header class="hero" style="padding-top: 40px; min-height: auto; padding-bottom: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px;">
+            <div class="logo-box cascade">
+                <img src="../logo.png" alt="Ethiopian Airlines Logo" style="height: 50px;">
+            </div>
+            <nav class="glass glass-nav" aria-label="Main navigation">
+              <a href="dashboard.php" class="glass-nav__item" style="text-decoration: none;">Dashboard</a>
+              <a href="view_lost.php" class="glass-nav__item" style="text-decoration: none;">Lost Items</a>
+              <a href="view_found.php" class="glass-nav__item" style="text-decoration: none;">Found Items</a>
+              <a href="match_items.php" class="glass-nav__item glass-nav__item--active" style="text-decoration: none;">Match Items</a>
+              <a href="logout.php" class="glass-nav__item" style="text-decoration: none; color: #f87171;">Logout</a>
+            </nav>
+        </div>
+    <h1 class="hero__title" style="font-size: 2.5rem;">Manual Item Matching</h1>
+  </header>
+
+  <div class="container page">
     <?php if ($success_msg): ?>
-        <div class="alert alert-success"><?= $success_msg ?></div>
+        <div class="glass-badge glass-badge--lime" style="width: 100%; justify-content: center; padding: 15px; margin-bottom: 30px; font-size: 1rem;">
+            <span class="glass-badge__dot"></span> <?= $success_msg ?>
+        </div>
     <?php endif; ?>
 
     <form action="process_match.php" method="POST" id="matchForm" onsubmit="return validateMatch()">
-        <div class="d-flex gap-1" style="flex-wrap: wrap;">
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
             
             <!-- Left Column: Lost Items -->
-            <div class="card" style="flex: 1; min-width: 300px;">
-                <h3 class="mb-2">1. Select Lost Item</h3>
-                <div class="mb-2">
-                    <input type="text" id="filterLost" class="form-control" placeholder="Filter lost items..." onkeyup="filterDivs('filterLost', 'lostList')">
+            <div class="glass glass-card" style="flex: 1; min-width: 350px;">
+                <h3 class="glass-card__title" style="font-size: 1.3rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 20px;">1. Select Lost Item</h3>
+                <div style="margin-bottom: 20px;">
+                    <div class="glass-input-wrap">
+                        <input type="text" id="filterLost" class="glass-input" placeholder="Filter lost items..." onkeyup="filterDivs('filterLost', 'lostList')">
+                        <span class="glass-input-icon">🔍</span>
+                    </div>
                 </div>
                 <div class="item-list" id="lostList">
                     <?php if (mysqli_num_rows($lost_result) > 0): ?>
@@ -84,12 +120,12 @@ unset($_SESSION['match_success']);
                                 <input type="radio" name="lost_id" id="lost_<?= $row['id'] ?>" value="<?= $row['id'] ?>">
                                 <label for="lost_<?= $row['id'] ?>" style="display:block; width: 100%;">
                                     <div class="match-card">
-                                        <div class="d-flex justify-between">
-                                            <strong><?= $row['claim_code'] ?></strong>
-                                            <span class="text-gray text-sm"><?= date('M d', strtotime($row['lost_date'])) ?></span>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <strong style="color: var(--accent-aqua); font-size: 0.9rem;"><?= $row['claim_code'] ?></strong>
+                                            <span style="font-size: 0.75rem; opacity: 0.6;"><?= date('M d', strtotime($row['lost_date'])) ?></span>
                                         </div>
-                                        <div style="font-weight: 600; margin-top: 5px;"><?= htmlspecialchars($row['item_name']) ?></div>
-                                        <div class="text-sm text-gray" style="font-size: 0.85rem; margin-top: 5px;">
+                                        <div style="font-weight: 600; margin-top: 8px; color: var(--color-text);"><?= htmlspecialchars($row['item_name']) ?></div>
+                                        <div style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8;">
                                             Color: <?= htmlspecialchars($row['item_color']) ?> | Loc: <?= htmlspecialchars($row['lost_location']) ?>
                                         </div>
                                     </div>
@@ -97,16 +133,19 @@ unset($_SESSION['match_success']);
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p class="text-center text-gray p-4">No pending lost items.</p>
+                        <p style="text-align: center; padding: 40px; opacity: 0.6;">No pending lost items.</p>
                     <?php endif; ?>
                 </div>
             </div>
 
             <!-- Right Column: Found Items -->
-            <div class="card" style="flex: 1; min-width: 300px;">
-                <h3 class="mb-2">2. Select Found Item</h3>
-                <div class="mb-2">
-                    <input type="text" id="filterFound" class="form-control" placeholder="Filter found items..." onkeyup="filterDivs('filterFound', 'foundList')">
+            <div class="glass glass-card" style="flex: 1; min-width: 350px;">
+                <h3 class="glass-card__title" style="font-size: 1.3rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 20px;">2. Select Found Item</h3>
+                <div style="margin-bottom: 20px;">
+                    <div class="glass-input-wrap">
+                        <input type="text" id="filterFound" class="glass-input" placeholder="Filter found items..." onkeyup="filterDivs('filterFound', 'foundList')">
+                        <span class="glass-input-icon">🔍</span>
+                    </div>
                 </div>
                 <div class="item-list" id="foundList">
                     <?php if (mysqli_num_rows($found_result) > 0): ?>
@@ -115,12 +154,12 @@ unset($_SESSION['match_success']);
                                 <input type="radio" name="found_id" id="found_<?= $row['id'] ?>" value="<?= $row['id'] ?>">
                                 <label for="found_<?= $row['id'] ?>" style="display:block; width: 100%;">
                                     <div class="match-card">
-                                        <div class="d-flex justify-between">
-                                            <strong><?= $row['found_code'] ?></strong>
-                                            <span class="text-gray text-sm"><?= date('M d', strtotime($row['found_date'])) ?></span>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <strong style="color: var(--accent-amber); font-size: 0.9rem;"><?= $row['found_code'] ?></strong>
+                                            <span style="font-size: 0.75rem; opacity: 0.6;"><?= date('M d', strtotime($row['found_date'])) ?></span>
                                         </div>
-                                        <div style="font-weight: 600; margin-top: 5px;"><?= htmlspecialchars($row['item_name']) ?></div>
-                                        <div class="text-sm text-gray" style="font-size: 0.85rem; margin-top: 5px;">
+                                        <div style="font-weight: 600; margin-top: 8px; color: var(--color-text);"><?= htmlspecialchars($row['item_name']) ?></div>
+                                        <div style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8;">
                                             Color: <?= htmlspecialchars($row['item_color']) ?> | Loc: <?= htmlspecialchars($row['found_location']) ?>
                                         </div>
                                     </div>
@@ -128,23 +167,26 @@ unset($_SESSION['match_success']);
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p class="text-center text-gray p-4">No unclaimed found items.</p>
+                        <p style="text-align: center; padding: 40px; opacity: 0.6;">No unclaimed found items.</p>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
 
-        <div class="card mt-4 text-center">
-            <h3 class="mb-2">3. Confirm Match</h3>
-            <p class="text-gray mb-4">Please select one item from each list above to match them.</p>
-            <button type="submit" class="btn btn-success" style="font-size: 1.2rem; padding: 15px 40px;">Confirm Match</button>
+        <div class="glass glass-card" style="margin-top: 40px; text-align: center; padding: 40px;">
+            <h3 class="glass-card__title">3. Confirm Match</h3>
+            <p class="glass-card__body" style="margin-bottom: 30px;">Please select one item from each list above to match them.</p>
+            <button type="submit" class="glass glass-btn glass-btn--primary" style="font-size: 1.1rem; padding: 18px 60px;">
+                Confirm Match
+            </button>
         </div>
     </form>
-</div>
 
-<footer>
-    <p>&copy; <?= date('Y') ?> <?= SITE_NAME ?>. Staff Portal.</p>
-</footer>
+    <footer class="footer">
+      <p class="footer__text">&copy; <?= date('Y') ?> <?= SITE_NAME ?>. Staff Portal.</p>
+    </footer>
+  </div>
+</main>
 
 <script src="../script.js"></script>
 <script>
