@@ -1,23 +1,12 @@
 {
-  "functions": {
-    "*.php": {
-      "runtime": "vercel-php@0.7.5"
-    },
-    "staff/**/*.php": {
-      "runtime": "vercel-php@0.7.5"
-    },
-    "passenger/**/*.php": {
-      "runtime": "vercel-php@0.7.5"
+  "builds": [
+    {
+      "src": "**/*.php",
+      "use": "vercel-php@0.7.5"
     }
-  },
+  ],
   "routes": [
-    {
-      "src": "/(.*).php",
-      "dest": "/$1.php"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.php"
-    }
+    { "src": "/(.*).php", "dest": "/$1.php" },
+    { "src": "/(.*)", "dest": "/index.php" }
   ]
 }
