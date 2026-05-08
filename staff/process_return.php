@@ -21,14 +21,11 @@ $notes = sanitize($_POST['notes']);
 mysqli_begin_transaction($conn);
 
 try {
-    // We would typically store return logs in a separate table, but for this simple version
-    // we'll just update the status in both tables and maybe store notes in description
-    
-    // Update found item
+    // Update found item status
     $update_found = "UPDATE found_items SET status = 'returned' WHERE id = $found_id";
     if (!mysqli_query($conn, $update_found)) throw new Exception("Error updating found item.");
 
-    // Update lost item
+    // Update lost item status
     $update_lost = "UPDATE lost_items SET status = 'returned' WHERE id = $lost_id";
     if (!mysqli_query($conn, $update_lost)) throw new Exception("Error updating lost item.");
 
@@ -48,50 +45,80 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Return Processed - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<header>
-    <div class="nav-container">
-        <a href="dashboard.php" class="logo">👨‍✈️ Staff Panel</a>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="view_lost.php">Lost Items</a></li>
-                <li><a href="view_found.php">Found Items</a></li>
-                <li><a href="match_items.php">Match Items</a></li>
-                <li><a href="logout.php" class="btn btn-danger text-white" style="color:white; padding: 5px 15px;">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<div class="container text-center">
-    <?php if ($success): ?>
-        <div class="card" style="max-width: 600px; margin: 2rem auto;">
-            <div class="mb-4" style="font-size: 4rem;">📦✅</div>
-            <h2 class="mb-2">Item Successfully Returned!</h2>
-            <p class="mb-4">The item has been handed over to <strong><?= htmlspecialchars($receiver_name) ?></strong> and the case is now closed.</p>
-            
-            <div class="d-flex gap-1 justify-center mt-4">
-                <a href="dashboard.php" class="btn btn-primary">Back to Dashboard</a>
-                <a href="return_item.php" class="btn btn-outline">Process Another Return</a>
-            </div>
-        </div>
-    <?php else: ?>
-        <div class="card" style="max-width: 600px; margin: 2rem auto;">
-            <div class="mb-4" style="font-size: 4rem;">❌</div>
-            <h2 class="mb-2" style="color: var(--danger);">Process Failed</h2>
-            <p>Error saving return record: <?= $error ?></p>
-            <a href="return_item.php?found_id=<?= $found_id ?>" class="btn btn-primary mt-4">Try Again</a>
-        </div>
-    <?php endif; ?>
+<div class="scene" aria-hidden="true">
+  <div class="scene__blob scene__blob--1"></div>
+  <div class="scene__blob scene__blob--2"></div>
+  <div class="scene__blob scene__blob--3"></div>
 </div>
 
-<footer>
-    <p>&copy; <?= date('Y') ?> <?= SITE_NAME ?>. Staff Portal.</p>
-</footer>
+<button class="glass glass-btn theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+  <span class="icon-dark"><i class="fas fa-sun"></i></span>
+  <span class="icon-light"><i class="fas fa-moon"></i></span>
+</button>
+
+<main class="page">
+  <header class="hero" style="min-height: auto; padding: 40px 24px 20px;">
+    <div class="container">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px;">
+            <div class="logo-box cascade">
+                <img src="../logo.png" alt="Ethiopian Airlines Logo" style="height: 50px;">
+            </div>
+            <nav class="glass glass-nav">
+              <a href="dashboard.php" class="glass-nav__item">Dashboard</a>
+              <a href="view_lost.php" class="glass-nav__item">Lost Items</a>
+              <a href="view_found.php" class="glass-nav__item">Found Items</a>
+              <a href="match_items.php" class="glass-nav__item">Match Items</a>
+              <a href="logout.php" class="glass-nav__item" style="color: var(--accent-rose);">Logout</a>
+            </nav>
+        </div>
+        <h1 class="hero__title" style="font-size: 2.5rem;">Process Completion</h1>
+    </div>
+  </header>
+
+  <div class="container page" style="max-width: 600px; margin-top: 40px;">
+    <div class="glass glass-card cascade" style="text-align: center; padding: 3rem;">
+        <?php if ($success): ?>
+            <div style="font-size: 5rem; color: var(--accent-aqua); margin-bottom: 25px;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="glass-card__title">Success!</h2>
+            <p class="glass-card__body" style="margin-bottom: 30px;">
+                The item has been successfully handed over to <strong style="color: var(--accent-amber);"><?= htmlspecialchars($receiver_name) ?></strong>.<br>
+                The case is now closed and archived.
+            </p>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <a href="dashboard.php" class="glass glass-btn glass-btn--primary" style="justify-content: center;">
+                    Back to Dashboard
+                </a>
+                <a href="return_item.php" class="glass glass-btn glass-btn--ghost" style="justify-content: center;">
+                    Process Another Return
+                </a>
+            </div>
+        <?php else: ?>
+            <div style="font-size: 5rem; color: var(--accent-rose); margin-bottom: 25px;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="glass-card__title">Process Failed</h2>
+            <p class="glass-card__body" style="margin-bottom: 30px;">
+                We encountered an error while updating the records:<br>
+                <code style="color: var(--accent-rose); background: rgba(238, 28, 35, 0.1); padding: 5px 10px; border-radius: 4px;"><?= $error ?></code>
+            </p>
+            <a href="return_item.php?found_id=<?= $found_id ?>" class="glass glass-btn glass-btn--primary" style="justify-content: center;">
+                Try Again
+            </a>
+        <?php endif; ?>
+    </div>
+
+    <footer class="footer">
+      <p class="footer__text">&copy; <?= date('Y') ?> <?= SITE_NAME ?>. Staff Portal.</p>
+    </footer>
+  </div>
+</main>
 
 <script src="../script.js"></script>
 </body>
