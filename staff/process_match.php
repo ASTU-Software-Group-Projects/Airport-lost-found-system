@@ -36,11 +36,11 @@ try {
     if (!mysqli_query($conn, $update_lost)) throw new Exception("Error updating lost item.");
 
     mysqli_commit($conn);
-    $_SESSION['match_success'] = "✅ Items matched successfully! The status has been updated to 'matched'.";
+    $_SESSION['match_success'] = "<i class=\"fas fa-check-circle\"></i> Items matched successfully! The status has been updated to 'matched'.";
     
 } catch (Exception $e) {
     mysqli_rollback($conn);
-    $_SESSION['match_success'] = "❌ Error: " . $e->getMessage();
+    $_SESSION['match_success'] = "<i class=\"fas fa-times-circle\"></i> Error: " . $e->getMessage();
 }
 
 header("Location: match_items.php");
