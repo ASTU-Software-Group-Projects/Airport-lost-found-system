@@ -10,103 +10,146 @@
 </head>
 <body>
 
-<header>
-    <div class="nav-container">
-        <a href="../index.php" class="logo"><img src="../assets/logo.png" alt="Ethiopian Airlines"></a>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="report.php" class="active">Report Lost Item</a></li>
-                <li><a href="check_status.php">Check Status</a></li>
-                <li><a href="../staff/login.php" class="btn btn-primary" style="padding: 5px 15px;">Staff Panel</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<div class="container">
-    <div class="card" style="max-width: 800px; margin: 0 auto;">
-        <h2 class="mb-4">Report Lost Item</h2>
-        <form id="reportForm" action="save_report.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm('reportForm')">
-            
-            <h3 class="mb-2">1. Contact Information</h3>
-            <div class="form-group">
-                <label class="form-label">Full Name *</label>
-                <input type="text" name="passenger_name" class="form-control" required minlength="3">
-            </div>
-            <div class="form-group d-flex gap-1" style="flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 250px;">
-                    <label class="form-label">Email Address *</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                <div style="flex: 1; min-width: 250px;">
-                    <label class="form-label">Phone Number *</label>
-                    <input type="tel" name="phone" class="form-control" required minlength="10">
-                </div>
-            </div>
-
-            <h3 class="mb-2 mt-4">2. Item Details</h3>
-            <div class="form-group d-flex gap-1" style="flex-wrap: wrap;">
-                <div style="flex: 2; min-width: 250px;">
-                    <label class="form-label">Item Name (e.g., Laptop, Wallet) *</label>
-                    <input type="text" name="item_name" class="form-control" required>
-                </div>
-                <div style="flex: 1; min-width: 150px;">
-                    <label class="form-label">Color *</label>
-                    <input type="text" name="item_color" class="form-control" required>
-                </div>
-                <div style="flex: 1; min-width: 150px;">
-                    <label class="form-label">Brand</label>
-                    <input type="text" name="brand" class="form-control">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Detailed Description *</label>
-                <textarea name="item_description" class="form-control" rows="4" required placeholder="Provide any unique identifying features..."></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Upload Photo (Optional)</label>
-                <input type="file" name="photo" class="form-control" accept="image/jpeg, image/png, image/gif" onchange="previewImage(this, 'photoPreview')">
-                <img id="photoPreview" src="#" alt="Preview" style="display:none; max-width: 200px; margin-top: 10px; border-radius: 8px;">
-            </div>
-
-            <h3 class="mb-2 mt-4">3. Where You Lost It</h3>
-            <div class="form-group d-flex gap-1" style="flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 250px;">
-                    <label class="form-label">Location *</label>
-                    <select name="lost_location" class="form-control" required>
-                        <option value="">Select a location</option>
-                        <option value="Terminal 1 Gate A">Terminal 1 Gate A</option>
-                        <option value="Terminal 1 Gate B">Terminal 1 Gate B</option>
-                        <option value="Terminal 2 Gate C">Terminal 2 Gate C</option>
-                        <option value="Food Court">Food Court</option>
-                        <option value="Security Check">Security Check</option>
-                        <option value="Baggage Claim">Baggage Claim</option>
-                        <option value="Gate A waiting area">Gate A waiting area</option>
-                        <option value="Gate C waiting area">Gate C waiting area</option>
-                        <option value="Parking Area">Parking Area</option>
-                        <option value="Other">Other (Please mention in description)</option>
-                    </select>
-                </div>
-                <div style="flex: 1; min-width: 250px;">
-                    <label class="form-label">Date Lost *</label>
-                    <input type="date" name="lost_date" class="form-control" required>
-                </div>
-            </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary w-100" style="font-size: 1.1rem; padding: 15px;">Submit Lost Item Report</button>
-            </div>
-        </form>
-    </div>
+<div class="scene" aria-hidden="true">
+  <div class="scene__blob scene__blob--1"></div>
+  <div class="scene__blob scene__blob--2"></div>
+  <div class="scene__blob scene__blob--3"></div>
 </div>
 
-<footer>
-    <p>&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
-</footer>
+<button class="glass glass-btn theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+  <span class="icon-dark"><i class="fas fa-sun"></i></span>
+  <span class="icon-light"><i class="fas fa-moon"></i></span>
+</button>
+
+<main class="page">
+  <header class="hero" style="min-height: auto; padding: 40px 24px 20px;">
+    <div class="container">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px;">
+            <div class="logo-box cascade">
+                <img src="../logo.png" alt="Ethiopian Airlines Logo" style="height: 50px;">
+            </div>
+            <nav class="glass glass-nav cascade">
+              <a href="../index.php" class="glass-nav__item">Home</a>
+              <a href="report.php" class="glass-nav__item glass-nav__item--active">Report Lost</a>
+              <a href="check_status.php" class="glass-nav__item">Check Status</a>
+              <a href="../staff/login.php" class="glass-nav__item">Staff Portal</a>
+            </nav>
+        </div>
+        <h1 class="hero__title" style="font-size: 3rem;">Report Lost Item</h1>
+        <p class="glass-card__body" style="max-width: 600px; margin: 0 auto;">Provide as much detail as possible to help our team identify your belongings.</p>
+    </div>
+  </header>
+
+  <div class="container" style="max-width: 800px; margin-top: 40px;">
+    <div class="glass glass-card cascade" style="animation-delay: 0.2s;">
+        <form id="reportForm" action="save_report.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm('reportForm')">
+            
+            <div style="margin-bottom: 40px;">
+                <h3 class="glass-card__title" style="font-size: 1.4rem; border-bottom: 1px solid var(--glass-border-subtle); padding-bottom: 10px; margin-bottom: 20px;">1. Contact Information</h3>
+                <div class="glass-form__row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label class="glass-card__label">Full Name *</label>
+                        <input type="text" name="passenger_name" class="glass-input" required placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="glass-card__label">Phone Number *</label>
+                        <input type="tel" name="phone" class="glass-input" required placeholder="+251...">
+                    </div>
+                </div>
+                <div class="glass-form__row" style="margin-top: 20px;">
+                    <div>
+                        <label class="glass-card__label">Email Address *</label>
+                        <input type="email" name="email" class="glass-input" required placeholder="your@email.com">
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 40px;">
+                <h3 class="glass-card__title" style="font-size: 1.4rem; border-bottom: 1px solid var(--glass-border-subtle); padding-bottom: 10px; margin-bottom: 20px;">2. Item Details</h3>
+                <div class="glass-form__row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label class="glass-card__label">Item Category *</label>
+                        <select name="item_category" class="glass-select" required>
+                            <option value="">Select Category</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Clothing">Clothing</option>
+                            <option value="Bags/Luggage">Bags/Luggage</option>
+                            <option value="Documents">Documents</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="glass-card__label">Item Name *</label>
+                        <input type="text" name="item_name" class="glass-input" required placeholder="e.g. MacBook Pro">
+                    </div>
+                </div>
+                <div class="glass-form__row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <div>
+                        <label class="glass-card__label">Color *</label>
+                        <input type="text" name="item_color" class="glass-input" required placeholder="e.g. Space Grey">
+                    </div>
+                    <div>
+                        <label class="glass-card__label">Brand</label>
+                        <input type="text" name="brand" class="glass-input" placeholder="e.g. Apple">
+                    </div>
+                </div>
+                <div class="glass-form__row" style="margin-top: 20px;">
+                    <label class="glass-card__label">Description *</label>
+                    <textarea name="item_description" class="glass-textarea" rows="4" required placeholder="Mention any unique marks, serial numbers, or features..."></textarea>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 40px;">
+                <h3 class="glass-card__title" style="font-size: 1.4rem; border-bottom: 1px solid var(--glass-border-subtle); padding-bottom: 10px; margin-bottom: 20px;">3. Incident Details</h3>
+                <div class="glass-form__row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label class="glass-card__label">Location Lost *</label>
+                        <select name="lost_location" class="glass-select" required>
+                            <option value="" disabled selected>Select Location</option>
+                            <option value="Terminal 1 - Arrivals">Terminal 1 - Arrivals</option>
+                            <option value="Terminal 1 - Departures">Terminal 1 - Departures</option>
+                            <option value="Terminal 2 - Arrivals">Terminal 2 - Arrivals</option>
+                            <option value="Terminal 2 - Departures">Terminal 2 - Departures</option>
+                            <option value="Domestic Terminal">Domestic Terminal</option>
+                            <option value="Baggage Claim Area">Baggage Claim Area</option>
+                            <option value="Security Checkpoint">Security Checkpoint</option>
+                            <option value="Duty Free Area">Duty Free Area</option>
+                            <option value="Business Lounge">Business Lounge</option>
+                            <option value="Parking Area">Parking Area</option>
+                            <option value="On-board (Flight)">On-board (Flight)</option>
+                            <option value="Restrooms">Restrooms</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="glass-card__label">Date Lost *</label>
+                        <input type="date" name="lost_date" class="glass-input" required>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 40px;">
+                <h3 class="glass-card__title" style="font-size: 1.4rem; border-bottom: 1px solid var(--glass-border-subtle); padding-bottom: 10px; margin-bottom: 20px;">4. Verification</h3>
+                <label class="glass-card__label">Upload Photo (Optional)</label>
+                <div class="glass-input-wrap">
+                    <input type="file" name="photo" class="glass-input" accept="image/*" style="padding-top: 10px;">
+                    <span class="glass-input-icon"><i class="fas fa-camera"></i></span>
+                </div>
+            </div>
+
+            <button type="submit" class="glass glass-btn glass-btn--primary" style="width: 100%; justify-content: center; padding: 20px; font-size: 1.2rem;">
+                Submit Report
+            </button>
+        </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+        <p class="footer__text">&copy; <?= date('Y') ?> Ethiopian Airlines. Safe Travels.</p>
+    </div>
+  </footer>
+</main>
 
 <script src="../script.js"></script>
 </body>
