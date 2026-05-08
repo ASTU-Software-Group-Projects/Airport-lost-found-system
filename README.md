@@ -73,7 +73,7 @@ Follow these steps to run the project locally on your machine:
 
 | Home Page | 
 | :---: |
-| ![Home](assets/home_screenshot.png) |
+| ![Home](home_screenshot.png) |
 
 ---
 
