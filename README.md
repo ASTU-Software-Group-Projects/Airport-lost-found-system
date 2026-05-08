@@ -77,6 +77,14 @@ Follow these steps to run the project locally on your machine:
 
 ---
 
+
+
+| Staff Portal | 
+| :---: |
+| ![Portal](staff_portal.png) |
+
+---
+
 ## 🔐 Staff Access (Demo)
 - **Username**: `staff`
 - **Password**: `staff123`
