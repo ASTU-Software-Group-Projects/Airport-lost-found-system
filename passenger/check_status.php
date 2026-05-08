@@ -10,43 +10,62 @@
 </head>
 <body>
 
-<header>
-    <div class="nav-container">
-        <a href="../index.php" class="logo"><img src="../assets/logo.png" alt="Ethiopian Airlines"></a>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="report.php">Report Lost Item</a></li>
-                <li><a href="check_status.php" class="active">Check Status</a></li>
-                <li><a href="../staff/login.php" class="btn btn-primary" style="padding: 5px 15px;">Staff Panel</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<div class="container d-flex align-center justify-center" style="min-height: 60vh;">
-    <div class="card text-center" style="max-width: 500px; width: 100%;">
-        <div class="mb-4" style="font-size: 3rem; color: var(--primary);"><i class="fas fa-search"></i></div>
-        <h2 class="mb-2">Check Item Status</h2>
-        <p class="mb-4 text-gray">Enter your unique claim code to check if your item has been found.</p>
-        
-        <form action="view_status.php" method="GET">
-            <div class="form-group">
-                <input type="text" name="code" class="form-control" style="font-size: 1.2rem; text-align: center; text-transform: uppercase; padding: 15px;" placeholder="e.g. LOST-A1B2C3" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100" style="padding: 15px; font-size: 1.1rem;">Check Status Now</button>
-        </form>
-        
-        <div class="mt-4 pt-4" style="border-top: 1px solid #E5E7EB;">
-            <p>Don't have a code? <a href="report.php">Report Lost Item</a></p>
-        </div>
-    </div>
+<div class="scene" aria-hidden="true">
+  <div class="scene__blob scene__blob--1"></div>
+  <div class="scene__blob scene__blob--2"></div>
+  <div class="scene__blob scene__blob--3"></div>
 </div>
 
-<footer>
-    <p>&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
-</footer>
+<!-- Theme toggle -->
+<button class="glass glass-btn theme-toggle-btn" id="theme-toggle" aria-label="Toggle colour scheme" title="Toggle light / dark mode">
+  <span class="icon-dark" aria-hidden="true"><i class="fas fa-sun"></i></span>
+  <span class="icon-light" aria-hidden="true"><i class="fas fa-moon"></i></span>
+</button>
+
+<main class="page">
+  <header class="hero" style="padding-top: 40px; min-height: auto; padding-bottom: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px;">
+            <div class="logo-box cascade">
+                <img src="../logo.png" alt="Ethiopian Airlines Logo" style="height: 50px;">
+            </div>
+            <nav class="glass glass-nav" aria-label="Main navigation">
+              <a href="../index.php" class="glass-nav__item" style="text-decoration: none;">Home</a>
+              <a href="report.php" class="glass-nav__item" style="text-decoration: none;">Report Lost</a>
+              <a href="check_status.php" class="glass-nav__item glass-nav__item--active" style="text-decoration: none;">Check Status</a>
+              <a href="../staff/login.php" class="glass-nav__item" style="text-decoration: none;">Staff Panel</a>
+            </nav>
+        </div>
+  </header>
+
+  <div class="container page" style="max-width: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh;">
+    <div class="glass glass-card" style="text-align: center; width: 100%;">
+        <div style="font-size: 3.5rem; margin-bottom: 20px; opacity: 0.8;"><i class="fas fa-search"></i></div>
+        <h2 class="glass-card__title">Check Item Status</h2>
+        <p class="glass-card__body" style="margin-bottom: 30px;">Enter your unique claim code to check if your item has been found.</p>
+        
+        <form id="statusForm" action="view_status.php" method="GET" onsubmit="return validateForm('statusForm')">
+            <div class="glass-form__row glass-form__row--full">
+                <div class="glass-input-wrap">
+                    <input type="text" name="code" class="glass-input" style="font-size: 1.3rem; text-align: center; text-transform: uppercase; padding: 18px;" placeholder="e.g. LOST-A1B2C3" required>
+                </div>
+            </div>
+            <div style="margin-top: 25px;">
+                <button type="submit" class="glass glass-btn glass-btn--primary" style="width: 100%; justify-content: center; padding: 18px; font-size: 1.1rem;">
+                    Check Status Now
+                </button>
+            </div>
+        </form>
+        
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--glass-border);">
+            <p class="glass-card__body">Don't have a code? <a href="report.php" style="color: var(--accent-aqua); font-weight: 500;">Report Lost Item</a></p>
+        </div>
+    </div>
+
+    <footer class="footer">
+      <p class="footer__text">&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
+    </footer>
+  </div>
+</main>
 
 <script src="../script.js"></script>
 </body>
