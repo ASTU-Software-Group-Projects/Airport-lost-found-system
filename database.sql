@@ -1,109 +1,129 @@
--- =============================================
--- DATABASE: lost_found_db
--- =============================================
+<?php
+require_once 'config.php';
 
-CREATE DATABASE IF NOT EXISTS lost_found_db;
-USE lost_found_db;
+// Get stats for the hero section
+$total_lost = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM lost_items"))['count'];
+$total_found = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM found_items"))['count'];
+$total_returned = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM lost_items WHERE status='returned'"))['count'];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Lost & Found - Ethiopian Airlines</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
 
--- =============================================
--- TABLE 1: lost_items
--- =============================================
-CREATE TABLE IF NOT EXISTS lost_items (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    claim_code VARCHAR(20) UNIQUE NOT NULL,
-    passenger_name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    item_name VARCHAR(100) NOT NULL,
-    item_description TEXT,
-    item_color VARCHAR(50),
-    brand VARCHAR(100),
-    lost_location VARCHAR(200),
-    lost_date DATE,
-    photo_path VARCHAR(500),
-    status ENUM('pending', 'matched', 'returned') DEFAULT 'pending',
-    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+<div class="scene" aria-hidden="true">
+  <div class="scene__blob scene__blob--1"></div>
+  <div class="scene__blob scene__blob--2"></div>
+  <div class="scene__blob scene__blob--3"></div>
+</div>
 
--- =============================================
--- TABLE 2: found_items
--- =============================================
-CREATE TABLE IF NOT EXISTS found_items (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    found_code VARCHAR(20) UNIQUE NOT NULL,
-    staff_name VARCHAR(100) NOT NULL,
-    item_name VARCHAR(100) NOT NULL,
-    item_description TEXT,
-    item_color VARCHAR(50),
-    brand VARCHAR(100),
-    found_location VARCHAR(200),
-    found_date DATE,
-    storage_location VARCHAR(200),
-    photo_path VARCHAR(500),
-    matched_to INT DEFAULT NULL,
-    status ENUM('unclaimed', 'matched', 'returned') DEFAULT 'unclaimed',
-    found_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (matched_to) REFERENCES lost_items(id) ON DELETE SET NULL
-);
+<button class="glass glass-btn theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+  <span class="icon-dark"><i class="fas fa-sun"></i></span>
+  <span class="icon-light"><i class="fas fa-moon"></i></span>
+</button>
 
--- =============================================
--- TABLE 3: staff_users
--- =============================================
-CREATE TABLE IF NOT EXISTS staff_users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    full_name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    role ENUM('staff', 'admin') DEFAULT 'staff',
-    last_login DATETIME,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+<main class="page">
+  <header class="hero">
+    <div class="container" style="display: flex; flex-direction: column; align-items: center; gap: 40px;">
+        <div class="logo-box cascade" style="margin-bottom: -10px;">
+          <img src="logo.png" alt="Ethiopian Airlines Logo" style="height: 60px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));">
+        </div>
 
--- =============================================
--- DEFAULT STAFF ACCOUNT
--- =============================================
-INSERT INTO staff_users (username, password, full_name, email, role) 
-VALUES ('staff', MD5('staff123'), 'Airport Staff', 'staff@airport.com', 'staff')
-ON DUPLICATE KEY UPDATE username=username;
+        <nav class="glass glass-nav cascade">
+          <a href="index.php" class="glass-nav__item glass-nav__item--active">Home</a>
+          <a href="passenger/report.php" class="glass-nav__item">Report Lost</a>
+          <a href="passenger/check_status.php" class="glass-nav__item">Check Status</a>
+          <a href="staff/login.php" class="glass-nav__item">Staff Portal</a>
+        </nav>
 
--- =============================================
--- SAMPLE LOST ITEMS (10 records)
--- =============================================
-INSERT INTO lost_items (claim_code, passenger_name, email, phone, item_name, item_description, item_color, lost_location, lost_date, status) VALUES
-('LOST-A1B2C3', 'John Doe', 'john@example.com', '9876543210', 'Black Backpack', 'Nike backpack with Dell laptop inside', 'Black', 'Terminal 1 Gate A', CURDATE(), 'pending'),
-('LOST-D4E5F6', 'Jane Smith', 'jane@example.com', '9876543211', 'iPhone 14', 'Silver iPhone with black case', 'Silver', 'Food Court', CURDATE(), 'pending'),
-('LOST-G7H8I9', 'Mike Johnson', 'mike@example.com', '9876543212', 'Passport', 'US passport with blue cover', 'Blue', 'Security Check', CURDATE(), 'matched'),
-('LOST-J0K1L2', 'Sarah Williams', 'sarah@example.com', '9876543213', 'Wallet', 'Brown leather wallet', 'Brown', 'Baggage Claim', DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'pending'),
-('LOST-M3N4O5', 'David Brown', 'david@example.com', '9876543214', 'Sunglasses', 'Ray-Ban wayfarer', 'Black', 'Terminal 2 Gate C', DATE_SUB(CURDATE(), INTERVAL 3 DAY), 'returned'),
-('LOST-P6Q7R8', 'Emily Davis', 'emily@example.com', '9876543215', 'Laptop', 'MacBook Pro 14"', 'Silver', 'Terminal 1 Gate B', CURDATE(), 'pending'),
-('LOST-S9T0U1', 'Robert Wilson', 'robert@example.com', '9876543216', 'Camera', 'Canon EOS DSLR', 'Black', 'Food Court', DATE_SUB(CURDATE(), INTERVAL 2 DAY), 'pending'),
-('LOST-V2W3X4', 'Lisa Anderson', 'lisa@example.com', '9876543217', 'Jacket', 'North Face black jacket', 'Black', 'Security Check', CURDATE(), 'pending'),
-('LOST-Y5Z6A7', 'Tom Martinez', 'tom@example.com', '9876543218', 'Tablet', 'iPad Pro with pencil', 'Space Gray', 'Gate A waiting area', DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'matched'),
-('LOST-B8C9D0', 'Anna Taylor', 'anna@example.com', '9876543219', 'Keys', 'Car keys with remote', 'Black', 'Parking Area', CURDATE(), 'pending');
+        <div class="hero__kicker glass-badge glass-badge--aqua cascade" style="animation-delay: 0.1s;">
+          <span class="glass-badge__dot"></span> Ethiopian Airlines Official Portal
+        </div>
+        
+        <h1 class="hero__title cascade" style="animation-delay: 0.2s;">
+          Lost it? <span style="color: var(--accent-amber);">We'll find it.</span>
+        </h1>
+        
+        <p class="hero__sub cascade" style="max-width: 600px; animation-delay: 0.3s; font-size: 1.25rem;">
+          Our state-of-the-art management system helps reconnect you with your belongings quickly and securely.
+        </p>
+        
+        <div class="hero__cta cascade" style="animation-delay: 0.4s;">
+          <a href="passenger/report.php" class="glass glass-btn glass-btn--primary" style="padding: 14px 28px; font-size: 0.95rem;">
+            <i class="fas fa-plus-circle"></i> Report Lost Item
+          </a>
+          <a href="passenger/check_status.php" class="glass glass-btn glass-btn--ghost" style="padding: 14px 28px; font-size: 0.95rem;">
+            <i class="fas fa-search"></i> Check Claim Status
+          </a>
+        </div>
 
--- =============================================
--- SAMPLE FOUND ITEMS (10 records)
--- =============================================
-INSERT INTO found_items (found_code, staff_name, item_name, item_description, item_color, found_location, found_date, storage_location, status) VALUES
-('FND-1A2B3C', 'Airport Staff', 'Black Backpack', 'Nike backpack', 'Black', 'Gate A seating area', CURDATE(), 'Rack 5, Shelf B', 'unclaimed'),
-('FND-4D5E6F', 'Airport Staff', 'iPhone 14', 'Silver iPhone', 'Silver', 'Food Court Table 3', CURDATE(), 'Counter 2, Drawer A', 'unclaimed'),
-('FND-7G8H9I', 'Airport Staff', 'Passport', 'US passport', 'Blue', 'Security Check counter', CURDATE(), 'Safe Box 1', 'matched'),
-('FND-0J1K2L', 'Airport Staff', 'Wallet', 'Brown leather wallet', 'Brown', 'Baggage Claim Carousel 4', DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'Counter 1, Drawer B', 'unclaimed'),
-('FND-3M4N5O', 'Airport Staff', 'Sunglasses', 'Ray-Ban sunglasses', 'Black', 'Gate C waiting area', DATE_SUB(CURDATE(), INTERVAL 3 DAY), 'Rack 2, Shelf A', 'returned'),
-('FND-6P7Q8R', 'Airport Staff', 'Laptop', 'MacBook Pro', 'Silver', 'Terminal 1 Gate B', CURDATE(), 'Rack 3, Shelf C', 'unclaimed'),
-('FND-9S0T1U', 'Airport Staff', 'Camera', 'Canon DSLR', 'Black', 'Food Court', DATE_SUB(CURDATE(), INTERVAL 2 DAY), 'Safe Box 2', 'unclaimed'),
-('FND-2V3W4X', 'Airport Staff', 'Jacket', 'North Face jacket', 'Black', 'Security Check', CURDATE(), 'Rack 1, Shelf D', 'unclaimed'),
-('FND-5Y6Z7A', 'Airport Staff', 'Tablet', 'iPad Pro', 'Space Gray', 'Gate A waiting area', DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'Rack 4, Shelf A', 'matched'),
-('FND-8B9C0D', 'Airport Staff', 'Keys', 'Car keys', 'Black', 'Parking Area', CURDATE(), 'Counter 3, Drawer C', 'unclaimed');
+        <div class="stats cascade" style="animation-delay: 0.5s;">
+          <div class="glass stats__item">
+            <div class="stats__num"><?= $total_lost ?></div>
+            <div class="stats__desc">Items Lost</div>
+          </div>
+          <div class="glass stats__item">
+            <div class="stats__num"><?= $total_found ?></div>
+            <div class="stats__desc">Items Found</div>
+          </div>
+          <div class="glass stats__item">
+            <div class="stats__num"><?= $total_returned ?></div>
+            <div class="stats__desc">Returned Home</div>
+          </div>
+        </div>
+    </div>
+  </header>
 
--- Update matches
-UPDATE found_items SET matched_to = (SELECT id FROM lost_items WHERE claim_code = 'LOST-G7H8I9') WHERE found_code = 'FND-7G8H9I';
-UPDATE lost_items SET status = 'matched' WHERE claim_code = 'LOST-G7H8I9';
-UPDATE found_items SET matched_to = (SELECT id FROM lost_items WHERE claim_code = 'LOST-Y5Z6A7') WHERE found_code = 'FND-5Y6Z7A';
-UPDATE lost_items SET status = 'matched' WHERE claim_code = 'LOST-Y5Z6A7';
-UPDATE found_items SET status = 'returned' WHERE found_code = 'FND-3M4N5O';
-UPDATE lost_items SET status = 'returned' WHERE claim_code = 'LOST-M3N4O5';
+  <section class="container" style="padding: 100px 0;">
+    <div class="glass glass-card cascade" style="animation-delay: 0.6s;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; padding: 20px;">
+        <div>
+          <h2 class="glass-card__title" style="font-size: 2rem;">How it works</h2>
+          <p class="glass-card__body">Our streamlined process ensures your claims are handled with priority and precision.</p>
+          <div style="margin-top: 30px;">
+              <a href="staff/login.php" style="color: var(--accent-amber); text-decoration: none; font-weight: 600;">Airport Staff? Login Here →</a>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 30px;">
+          <div style="display: flex; gap: 20px; align-items: flex-start;">
+            <div class="glass-badge glass-badge--aqua" style="width: 40px; height: 40px; border-radius: 50%; justify-content: center; flex-shrink: 0; font-size: 1rem;">1</div>
+            <div>
+              <h4 style="margin-bottom: 8px; font-size: 1.2rem;">Submit a Report</h4>
+              <p class="glass-card__body" style="font-size: 0.95rem;">Provide details and photos of your lost item. Get a unique claim code instantly.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 20px; align-items: flex-start;">
+            <div class="glass-badge glass-badge--amber" style="width: 40px; height: 40px; border-radius: 50%; justify-content: center; flex-shrink: 0; font-size: 1rem;">2</div>
+            <div>
+              <h4 style="margin-bottom: 8px; font-size: 1.2rem;">We Search</h4>
+              <p class="glass-card__body" style="font-size: 0.95rem;">Our staff matches reports against found inventory using smart algorithms.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 20px; align-items: flex-start;">
+            <div class="glass-badge glass-badge--lime" style="width: 40px; height: 40px; border-radius: 50%; justify-content: center; flex-shrink: 0; font-size: 1rem;">3</div>
+            <div>
+              <h4 style="margin-bottom: 8px; font-size: 1.2rem;">Collect Item</h4>
+              <p class="glass-card__body" style="font-size: 0.95rem;">Once matched, visit our terminal office with your ID to collect your item.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-SELECT '✅ Database setup complete!' AS Status;
+  <footer class="footer">
+    <div class="container">
+        <p class="footer__text">&copy; <?= date('Y') ?> Ethiopian Airlines Airport Lost & Found. All rights reserved.</p>
+    </div>
+  </footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
