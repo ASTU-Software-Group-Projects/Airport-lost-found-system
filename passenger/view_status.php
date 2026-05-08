@@ -40,96 +40,119 @@ if (!empty($code)) {
 </head>
 <body>
 
-<header>
-    <div class="nav-container">
-        <a href="../index.php" class="logo"><img src="../assets/logo.png" alt="Ethiopian Airlines"></a>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="report.php">Report Lost Item</a></li>
-                <li><a href="check_status.php" class="active">Check Status</a></li>
-                <li><a href="../staff/login.php" class="btn btn-primary" style="padding: 5px 15px;">Staff Panel</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+<div class="scene" aria-hidden="true">
+  <div class="scene__blob scene__blob--1"></div>
+  <div class="scene__blob scene__blob--2"></div>
+  <div class="scene__blob scene__blob--3"></div>
+</div>
 
-<div class="container">
+<!-- Theme toggle -->
+<button class="glass glass-btn theme-toggle-btn" id="theme-toggle" aria-label="Toggle colour scheme" title="Toggle light / dark mode">
+  <span class="icon-dark" aria-hidden="true"><i class="fas fa-sun"></i></span>
+  <span class="icon-light" aria-hidden="true"><i class="fas fa-moon"></i></span>
+</button>
+
+<main class="page">
+  <header class="hero" style="padding-top: 40px; min-height: auto; padding-bottom: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px;">
+            <div class="logo-box cascade">
+                <img src="../logo.png" alt="Ethiopian Airlines Logo" style="height: 50px;">
+            </div>
+            <nav class="glass glass-nav" aria-label="Main navigation">
+              <a href="../index.php" class="glass-nav__item" style="text-decoration: none;">Home</a>
+              <a href="report.php" class="glass-nav__item" style="text-decoration: none;">Report Lost</a>
+              <a href="check_status.php" class="glass-nav__item glass-nav__item--active" style="text-decoration: none;">Check Status</a>
+              <a href="../staff/login.php" class="glass-nav__item" style="text-decoration: none;">Staff Panel</a>
+            </nav>
+        </div>
+    <h1 class="hero__title" style="font-size: 2.5rem;">Report Status</h1>
+  </header>
+
+  <div class="container page">
     <?php if ($error): ?>
-        <div class="card text-center" style="max-width: 600px; margin: 2rem auto;">
-            <div class="mb-4" style="font-size: 4rem; color: var(--danger);"><i class="fas fa-exclamation-circle"></i></div>
-            <h2 class="mb-2" style="color: var(--danger);">Not Found</h2>
-            <p><?= $error ?></p>
-            <a href="check_status.php" class="btn btn-primary mt-4">Try Again</a>
+        <div class="glass glass-card" style="text-align: center; max-width: 600px; margin: 0 auto;">
+            <div style="font-size: 4rem; color: #f87171; margin-bottom: 20px;"><i class="fas fa-exclamation-circle"></i></div>
+            <h2 class="glass-card__title" style="color: #f87171;">Not Found</h2>
+            <p class="glass-card__body"><?= $error ?></p>
+            <div style="margin-top: 30px;">
+                <a href="check_status.php" class="glass glass-btn glass-btn--primary">Try Again</a>
+            </div>
         </div>
     <?php elseif ($lost_item): ?>
         
-        <div class="d-flex justify-between align-center mb-4">
-            <h2>Status for: <?= htmlspecialchars($code) ?></h2>
-            <div><?= getStatusBadge($lost_item['status']) ?></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+            <h2 class="glass-card__title" style="margin-bottom: 0;">Status for: <span style="color: var(--accent-aqua);"><?= htmlspecialchars($code) ?></span></h2>
+            <div>
+                <?php 
+                $statusClass = 'glass-badge--amber';
+                if($lost_item['status'] == 'matched') $statusClass = 'glass-badge--lime';
+                if($lost_item['status'] == 'returned') $statusClass = 'glass-badge--violet';
+                ?>
+                <span class="glass-badge <?= $statusClass ?>"><span class="glass-badge__dot"></span><?= strtoupper($lost_item['status']) ?></span>
+            </div>
         </div>
 
         <?php if ($lost_item['status'] == 'pending'): ?>
-            <div class="alert alert-warning text-center" style="padding: 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--warning);"><i class="fas fa-search"></i></div>
-                <h3>Searching for your item</h3>
-                <p class="mt-2">Our staff is currently looking for your item. We will update this status once a match is found.</p>
+            <div class="glass glass-card" style="text-align: center; padding: 40px; margin-bottom: 30px; border-color: rgba(255, 210, 127, 0.4);">
+                <div style="font-size: 3.5rem; margin-bottom: 20px; color: var(--accent-amber);"><i class="fas fa-search"></i></div>
+                <h3 class="glass-card__title">Searching for your item</h3>
+                <p class="glass-card__body">Our staff is currently looking for your item. We will update this status once a match is found. Please check back later.</p>
             </div>
         <?php elseif ($lost_item['status'] == 'matched'): ?>
-            <div class="alert alert-success text-center" style="padding: 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
-                <h3>Item Found!</h3>
-                <p class="mt-2">Good news! We have found an item that matches your report. Please visit the Lost & Found office to claim it.</p>
-                <div class="mt-4">
-                    <a href="claim_item.php?code=<?= $code ?>" class="btn btn-success" style="font-size: 1.2rem; padding: 15px 30px;">Claim My Item Now</a>
+            <div class="glass glass-card" style="text-align: center; padding: 40px; margin-bottom: 30px; border-color: rgba(168, 240, 138, 0.4);">
+                <div style="font-size: 3.5rem; margin-bottom: 20px;">🎉</div>
+                <h3 class="glass-card__title">Item Found!</h3>
+                <p class="glass-card__body">Good news! We have found an item that matches your report. Please visit the Lost & Found office to claim it.</p>
+                <div style="margin-top: 30px;">
+                    <a href="claim_item.php?code=<?= $code ?>" class="glass glass-btn glass-btn--primary" style="font-size: 1.1rem; padding: 15px 40px;">Claim My Item Now</a>
                 </div>
             </div>
         <?php elseif ($lost_item['status'] == 'returned'): ?>
-            <div class="alert alert-info text-center" style="padding: 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--info);"><i class="fas fa-box-open"></i></div>
-                <h3>Item Successfully Returned</h3>
-                <p class="mt-2">This item has been successfully returned to its owner. Case closed.</p>
+            <div class="glass glass-card" style="text-align: center; padding: 40px; margin-bottom: 30px; border-color: rgba(180, 144, 245, 0.4);">
+                <div style="font-size: 3.5rem; margin-bottom: 20px; color: var(--accent-violet);"><i class="fas fa-box-open"></i></div>
+                <h3 class="glass-card__title">Item Successfully Returned</h3>
+                <p class="glass-card__body">This item has been successfully returned to its owner. Case closed. Thank you for using our service.</p>
             </div>
         <?php endif; ?>
 
-        <div class="card-grid mt-4">
-            <div class="card">
-                <h3 class="mb-4 border-bottom pb-2">Your Report Details</h3>
-                <table class="w-100">
-                    <tr><td style="color: var(--gray); width: 40%;">Item Name</td><td><strong><?= htmlspecialchars($lost_item['item_name']) ?></strong></td></tr>
-                    <tr><td style="color: var(--gray);">Date Lost</td><td><?= date('M d, Y', strtotime($lost_item['lost_date'])) ?></td></tr>
-                    <tr><td style="color: var(--gray);">Location Lost</td><td><?= htmlspecialchars($lost_item['lost_location']) ?></td></tr>
-                    <tr><td style="color: var(--gray);">Color/Brand</td><td><?= htmlspecialchars($lost_item['item_color']) ?> / <?= htmlspecialchars($lost_item['brand']) ?></td></tr>
-                    <tr><td style="color: var(--gray);">Description</td><td><?= nl2br(htmlspecialchars($lost_item['item_description'])) ?></td></tr>
+        <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div class="glass glass-card">
+                <h3 class="glass-card__title" style="font-size: 1.3rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 20px;">Your Report Details</h3>
+                <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                    <tr><td class="glass-card__label" style="width: 40%; margin-bottom: 0;">Item Name</td><td><strong style="color: var(--color-text);"><?= htmlspecialchars($lost_item['item_name']) ?></strong></td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Date Lost</td><td><span style="color: var(--color-text);"><?= date('M d, Y', strtotime($lost_item['lost_date'])) ?></span></td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Location Lost</td><td><span style="color: var(--color-text);"><?= htmlspecialchars($lost_item['lost_location']) ?></span></td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Color/Brand</td><td><span style="color: var(--color-text);"><?= htmlspecialchars($lost_item['item_color']) ?> / <?= htmlspecialchars($lost_item['brand']) ?></span></td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Description</td><td><span style="color: var(--color-text);"><?= nl2br(htmlspecialchars($lost_item['item_description'])) ?></span></td></tr>
                 </table>
             </div>
 
             <?php if ($found_item): ?>
-            <div class="card">
-                <h3 class="mb-4 border-bottom pb-2">Found Item Details</h3>
-                <table class="w-100">
-                    <tr><td style="color: var(--gray); width: 40%;">Item Name</td><td><strong><?= htmlspecialchars($found_item['item_name']) ?></strong></td></tr>
-                    <tr><td style="color: var(--gray);">Date Found</td><td><?= date('M d, Y', strtotime($found_item['found_date'])) ?></td></tr>
-                    <tr><td style="color: var(--gray);">Location Found</td><td><?= htmlspecialchars($found_item['found_location']) ?></td></tr>
+            <div class="glass glass-card">
+                <h3 class="glass-card__title" style="font-size: 1.3rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 20px;">Found Item Details</h3>
+                <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                    <tr><td class="glass-card__label" style="width: 40%; margin-bottom: 0;">Item Name</td><td><strong style="color: var(--color-text);"><?= htmlspecialchars($found_item['item_name']) ?></strong></td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Date Found</td><td><span style="color: var(--color-text);"><?= date('M d, Y', strtotime($found_item['found_date'])) ?></span></td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Location Found</td><td><span style="color: var(--color-text);"><?= htmlspecialchars($found_item['found_location']) ?></span></td></tr>
                     <?php if ($lost_item['status'] == 'matched'): ?>
-                    <tr><td style="color: var(--gray);">Collection Point</td><td><strong>Main Terminal Lost & Found Office (Counter 3)</strong></td></tr>
-                    <tr><td style="color: var(--gray);">Office Hours</td><td>08:00 AM - 10:00 PM (Daily)</td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Collection Point</td><td><strong style="color: var(--accent-aqua);">Main Terminal Office (C3)</strong></td></tr>
+                    <tr><td class="glass-card__label" style="margin-bottom: 0;">Office Hours</td><td><span style="color: var(--color-text);">08:00 AM - 10:00 PM</span></td></tr>
                     <?php endif; ?>
                 </table>
                 <?php if ($lost_item['status'] == 'matched'): ?>
-                    <p class="mt-4 text-sm text-gray" style="font-size: 0.9rem;"><em>* Please bring valid ID proof when collecting your item.</em></p>
+                    <p class="glass-card__body" style="font-size: 0.85rem; margin-top: 20px; font-style: italic; opacity: 0.7;">* Please bring valid ID proof when collecting your item.</p>
                 <?php endif; ?>
             </div>
             <?php endif; ?>
         </div>
 
     <?php endif; ?>
-</div>
 
-<footer>
-    <p>&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
-</footer>
+    <footer class="footer">
+      <p class="footer__text">&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
+    </footer>
+  </div>
+</main>
 
 <script src="../script.js"></script>
 </body>
