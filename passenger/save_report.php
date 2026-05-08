@@ -50,53 +50,91 @@ if (mysqli_query($conn, $query)) {
 </head>
 <body>
 
-<header>
-    <div class="nav-container">
-        <a href="../index.php" class="logo"><img src="../assets/logo.png" alt="Ethiopian Airlines"></a>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="report.php">Report Lost Item</a></li>
-                <li><a href="check_status.php">Check Status</a></li>
-                <li><a href="../staff/login.php" class="btn btn-primary text-white" style="color:white; padding: 5px 15px;">Staff Panel</a></li>
-            </ul>
+<div class="scene" aria-hidden="true">
+  <div class="scene__blob scene__blob--1"></div>
+  <div class="scene__blob scene__blob--2"></div>
+  <div class="scene__blob scene__blob--3"></div>
+</div>
+
+<!-- Theme toggle -->
+<button class="glass glass-btn theme-toggle-btn" id="theme-toggle" aria-label="Toggle colour scheme" title="Toggle light / dark mode">
+  <span class="icon-dark" aria-hidden="true"><i class="fas fa-sun"></i></span>
+  <span class="icon-light" aria-hidden="true"><i class="fas fa-moon"></i></span>
+</button>
+
+<main class="page">
+  <header class="hero" style="padding-top: 40px; min-height: auto; padding-bottom: 20px;">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px;">
+        <div class="logo-box cascade">
+            <img src="../logo.png" alt="Ethiopian Airlines Logo" style="height: 50px;">
+        </div>
+        <nav class="glass glass-nav">
+          <a href="../index.php" class="glass-nav__item">Home</a>
+          <a href="report.php" class="glass-nav__item">Report Lost</a>
+          <a href="check_status.php" class="glass-nav__item">Check Status</a>
+          <a href="../staff/login.php" class="glass-nav__item">Staff Portal</a>
         </nav>
     </div>
-</header>
+  </header>
 
-<div class="container text-center">
+  <div class="container page" style="max-width: 650px;">
     <?php if ($success): ?>
-        <div class="card" style="max-width: 600px; margin: 2rem auto;">
-            <div class="mb-4" style="font-size: 4rem; color: var(--success);"><i class="fas fa-check-circle"></i></div>
-            <h2 class="mb-2">Report Submitted Successfully!</h2>
-            <p class="mb-4">We have received your lost item report. Please keep the claim code below to check your status.</p>
+        <div class="glass glass-card" style="text-align: center; padding: 50px 30px;">
+            <div style="font-size: 4.5rem; color: var(--accent-lime); margin-bottom: 25px; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="glass-card__title" style="font-size: 2rem; margin-bottom: 15px;">Report Submitted!</h2>
+            <p class="glass-card__body" style="font-size: 1.1rem; opacity: 0.8; margin-bottom: 40px;">
+                Your report has been logged. Please save the claim code below to track your item's status.
+            </p>
             
-            <div style="background: var(--light); padding: 2rem; border-radius: var(--border-radius-card); border: 2px dashed var(--secondary); margin-bottom: 2rem;">
-                <p class="mb-2" style="color: var(--gray); font-weight: 600;">YOUR CLAIM CODE</p>
-                <h1 id="claimCodeDisplay" style="font-size: 2.5rem; letter-spacing: 2px; color: var(--primary);"><?= $claim_code ?></h1>
-                <button onclick="copyToClipboard('claimCodeDisplay')" class="btn btn-outline mt-2"><i class="fas fa-copy"></i> Copy Code</button>
+            <div style="background: var(--glass-white-md); padding: 30px; border-radius: var(--radius-lg); border: 2px dashed var(--accent-amber); margin-bottom: 40px; position: relative;">
+                <p class="glass-card__label" style="text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">Your Claim Code</p>
+                <h1 id="claimCodeDisplay" style="font-size: 3rem; letter-spacing: 5px; color: var(--accent-amber); font-weight: 800; margin-bottom: 15px;"><?= $claim_code ?></h1>
+                <button onclick="copyToClipboard('claimCodeDisplay')" class="glass glass-btn" style="padding: 10px 20px; font-size: 0.9rem; margin: 0 auto;">
+                    <i class="fas fa-copy"></i> Copy Code
+                </button>
             </div>
             
-            <div class="d-flex gap-1 justify-center" style="justify-content: center; flex-wrap: wrap;">
-                <a href="view_status.php?code=<?= $claim_code ?>" class="btn btn-primary">Check Status Now</a>
-                <a href="report.php" class="btn btn-secondary">Report Another Item</a>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="view_status.php?code=<?= $claim_code ?>" class="glass glass-btn glass-btn--primary" style="padding: 15px 30px;">
+                    Check Status Now
+                </a>
+                <a href="report.php" class="glass glass-btn glass-btn--ghost" style="padding: 15px 30px;">
+                    Report Another
+                </a>
             </div>
         </div>
     <?php else: ?>
-        <div class="card" style="max-width: 600px; margin: 2rem auto;">
-            <div class="mb-4" style="font-size: 4rem; color: var(--danger);"><i class="fas fa-times-circle"></i></div>
-            <h2 class="mb-2" style="color: var(--danger);">Submission Failed</h2>
-            <p>Sorry, there was an error submitting your report: <?= $error ?></p>
-            <a href="report.php" class="btn btn-primary mt-4">Try Again</a>
+        <div class="glass glass-card" style="text-align: center; padding: 50px 30px; border-color: rgba(238, 28, 35, 0.3);">
+            <div style="font-size: 4.5rem; color: var(--accent-rose); margin-bottom: 25px;">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <h2 class="glass-card__title" style="color: var(--accent-rose);">Submission Failed</h2>
+            <p class="glass-card__body" style="margin-bottom: 30px;">
+                Sorry, there was an error processing your report. Please try again.
+            </p>
+            <p style="font-family: monospace; font-size: 0.8rem; opacity: 0.6; margin-bottom: 30px;">
+                Error: <?= htmlspecialchars($error) ?>
+            </p>
+            <a href="report.php" class="glass glass-btn glass-btn--primary">Go Back & Try Again</a>
         </div>
     <?php endif; ?>
-</div>
 
-<footer>
-    <p>&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
-</footer>
+    <footer class="footer">
+      <p class="footer__text">&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
+    </footer>
+  </div>
+</main>
 
 <script src="../script.js"></script>
+<script>
+function copyToClipboard(elementId) {
+    const text = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Claim Code copied to clipboard!');
+    });
+}
+</script>
 </body>
 </html>
