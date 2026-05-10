@@ -4,6 +4,12 @@ A complete, production-ready web application designed to help airports manage lo
 
 ---
 
+### 🌐 Live Deployment
+Experience the system live in action:
+**[Explore the Ethiopian Lost & Found System ↗️](https://ethiopian-lost-found.infinityfreeapp.com)**
+
+---
+
 ## 🌟 Key Features
 
 ### 👤 Passenger Portal
@@ -20,7 +26,19 @@ A complete, production-ready web application designed to help airports manage lo
 ### 🎨 Premium User Experience
 - **Responsive Design**: Optimized for Desktop, Tablet, and Mobile devices.
 - **Modern UI**: Elegant color palette inspired by Ethiopian Airlines branding (Deep Forest Green and Gold).
+
 ---
+
+## 🎬 System Walkthrough
+Experience the full workflow of the system, from reporting a lost item to the staff-side management and matching process.
+
+[![](https://img.shields.io/badge/Watch_Navigation_Video-EA3C12?style=for-the-badge&logo=youtube&logoColor=white)](https://res.cloudinary.com/dq4v4bzrn/video/upload/v1778243463/web1_d7rgyy.webm)
+
+> [!TIP]
+> This video covers the end-to-end navigation of the Passenger Portal and Staff Management System.
+
+---
+
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML5, CSS3, Vanilla JavaScript
@@ -93,3 +111,4 @@ Follow these steps to run the project locally on your machine:
 ## 📄 License
 
 This project is licensed under the MIT License.
+
