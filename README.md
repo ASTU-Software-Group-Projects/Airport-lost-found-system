@@ -8,6 +8,11 @@ A complete, production-ready web application designed to help airports manage lo
 Experience the system live in action:
 **[Explore the Ethiopian Lost & Found System ↗️](https://ethiopian-lost-found.infinityfreeapp.com)**
 
+#### 🔐 Staff Access (Demo)
+Use these credentials to access the administrative dashboard:
+- **Username**: `staff`
+- **Password**: `staff123`
+
 ---
 
 ## 🌟 Key Features
@@ -103,9 +108,7 @@ Follow these steps to run the project locally on your machine:
 
 ---
 
-## 🔐 Staff Access (Demo)
-- **Username**: `staff`
-- **Password**: `staff123`
+
 
 
 ## 📄 License
